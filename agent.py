@@ -23,9 +23,7 @@ llm: OpenAI = OpenAI(
     api_key=os.getenv("OPENAI_API_KEY")
 )
 
-git: Github = Github(
-    login_or_token=os.getenv("GITHUB_TOKEN")
-)
+git: Github = Github(os.getenv("GITHUB_TOKEN")) if os.getenv("GITHUB_TOKEN") else Github()
 repository =  os.getenv("REPOSITORY")
 pr_number = os.getenv("PR_NUMBER")
 
@@ -333,7 +331,7 @@ workflow: AgentWorkflow = AgentWorkflow(
 ctx = Context(workflow)
 
 async def main():
-    query = f"Write a review for PR number {pr_number}"
+    query = f"Write a review for PR: {pr_number}"
     prompt = RichPromptTemplate(query)
 
     handler = workflow.run(prompt.format())
